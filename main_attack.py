@@ -8,7 +8,7 @@ from utils.get_dataset import get_dataset
 from utils.get_models import get_models
 from utils.tools import get_project_path
 import argparse
-from attack_method import MI_FGSM_SMER_meta
+from attack_method import MI_FGSM_NAMEA
 from torchvision.utils import save_image
 
 
@@ -21,7 +21,7 @@ def get_args():
     parser.add_argument('--image-size', type=int, default=224,
                         help='image size of the dataloader')
     parser.add_argument('--num_worker', type=int, default=0)
-    parser.add_argument('--attack_method', type=str, default='I_FGSM_SMER_meta')
+    parser.add_argument('--attack_method', type=str, default='MI_FGSM_NAMEA')
     parser.add_argument('--image-dir', type=str, default='clean_img')
     parser.add_argument('--att-dir', type=str, default='')
     parser.add_argument('--image-info', type=str,
@@ -41,7 +41,7 @@ def get_args():
 
 def main(args):
     cur_attack = {
-                  'MI_FGSM_SMER_meta': MI_FGSM_SMER_meta,
+                  'MI_FGSM_NAMEA': MI_FGSM_NAMEA,
                   }
     device = torch.device(f'cuda:{args.gpu_id}')
     # dataset

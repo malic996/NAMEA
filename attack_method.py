@@ -154,7 +154,7 @@ def remove_hooks(hook_handles):
 
 
 
-def MI_FGSM_SMER_meta(surrogate_models,images, labels, args, num_iter=10):
+def MI_FGSM_NAMEA(surrogate_models,images, labels, args, num_iter=10):
     hook_handles = []
     eps = args.eps/255.0
     alpha = args.alpha/255.0
@@ -167,7 +167,7 @@ def MI_FGSM_SMER_meta(surrogate_models,images, labels, args, num_iter=10):
     image_max = clip_by_tensor(images + eps, 0.0, 1.0)
     clean_img = images.clone().detach()
     m = len(surrogate_models)
-    m_smer = m * 4
+    m_namea = m * 4
     grad_final = 0
     grad_noatt = 0
     x_local = images.clone().detach()
@@ -183,17 +183,17 @@ def MI_FGSM_SMER_meta(surrogate_models,images, labels, args, num_iter=10):
         # x_inner_noatt = images.detach()
         x_before = images.clone()
         x_inner_noatt_before = x_local.clone()
-        noise_inner_global = torch.zeros([m_smer, *images.shape]).to(images.device)
-        noise_inner_all = torch.zeros([m_smer, *images.shape]).to(images.device)
-        noise_inner_noatt_all = torch.zeros([m_smer, *images.shape]).to(images.device)
-        mask = torch.zeros([m_smer, *images.shape]).to(images.device)
-        mask_noatt = torch.zeros([m_smer, *images.shape]).to(images.device)
+        noise_inner_global = torch.zeros([m_namea, *images.shape]).to(images.device)
+        noise_inner_all = torch.zeros([m_namea, *images.shape]).to(images.device)
+        noise_inner_noatt_all = torch.zeros([m_namea, *images.shape]).to(images.device)
+        mask = torch.zeros([m_namea, *images.shape]).to(images.device)
+        mask_noatt = torch.zeros([m_namea, *images.shape]).to(images.device)
         grad_inner1 = torch.zeros_like(images)
         grad_inner2 = torch.zeros_like(images)
         grad_inner_before = torch.zeros_like(images)
 
         options = []
-        for i in range(int(m_smer / m)):
+        for i in range(int(m_namea / m)):
             options_single=[j for j in range(m)]
             np.random.shuffle(options_single)
             options.append(options_single)
@@ -202,7 +202,7 @@ def MI_FGSM_SMER_meta(surrogate_models,images, labels, args, num_iter=10):
         adv_list_pre = []
         grad_list_pre = []
 
-        for j in range(m_smer):
+        for j in range(m_namea):
             option = options[j]
             grad_single = surrogate_models[option]
             adv_list_pre.append(x_inner.clone())
@@ -221,7 +221,7 @@ def MI_FGSM_SMER_meta(surrogate_models,images, labels, args, num_iter=10):
             grad_list_pre.append(grad_inner1.clone())
             noise_inner_all[j] = grad_inner1.clone()
         # mate test
-        for j in range(m_smer):
+        for j in range(m_namea):
             remove_hooks(hook_handles)
             option = options[j]
             grad_single = surrogate_models[option]
@@ -299,7 +299,7 @@ def MI_FGSM_SMER_meta(surrogate_models,images, labels, args, num_iter=10):
 
 
 
-def I_FGSM_SMER_meta(surrogate_models,images, labels, args, num_iter=10):
+def I_FGSM_NAMEA(surrogate_models,images, labels, args, num_iter=10):
     hook_handles = []  # 存储 Hook 句柄
     eps = args.eps/255.0
     alpha = args.alpha/255.0
@@ -312,7 +312,7 @@ def I_FGSM_SMER_meta(surrogate_models,images, labels, args, num_iter=10):
     image_max = clip_by_tensor(images + eps, 0.0, 1.0)
     clean_img = images.clone().detach()
     m = len(surrogate_models)
-    m_smer = m * 4
+    m_namea = m * 4
     grad_final = 0
     grad_noatt = 0
     x_local = images.clone().detach()
@@ -328,17 +328,17 @@ def I_FGSM_SMER_meta(surrogate_models,images, labels, args, num_iter=10):
         x_inner_noatt = images.detach()
         x_before = images.clone()
         x_inner_noatt_before = x_local.clone()
-        noise_inner_global = torch.zeros([m_smer, *images.shape]).to(images.device)
-        noise_inner_all = torch.zeros([m_smer, *images.shape]).to(images.device)
-        noise_inner_noatt_all = torch.zeros([m_smer, *images.shape]).to(images.device)
-        mask = torch.zeros([m_smer, *images.shape]).to(images.device)
-        mask_noatt = torch.zeros([m_smer, *images.shape]).to(images.device)
+        noise_inner_global = torch.zeros([m_namea, *images.shape]).to(images.device)
+        noise_inner_all = torch.zeros([m_namea, *images.shape]).to(images.device)
+        noise_inner_noatt_all = torch.zeros([m_namea, *images.shape]).to(images.device)
+        mask = torch.zeros([m_namea, *images.shape]).to(images.device)
+        mask_noatt = torch.zeros([m_namea, *images.shape]).to(images.device)
         grad_inner1 = torch.zeros_like(images)
         grad_inner2 = torch.zeros_like(images)
         grad_inner_before = torch.zeros_like(images)
 
         options = []
-        for i in range(int(m_smer / m)):
+        for i in range(int(m_namea / m)):
             options_single=[j for j in range(m)]
             np.random.shuffle(options_single)
             options.append(options_single)
@@ -347,7 +347,7 @@ def I_FGSM_SMER_meta(surrogate_models,images, labels, args, num_iter=10):
         adv_list_pre = []
         grad_list_pre = []
 
-        for j in range(m_smer):
+        for j in range(m_namea):
             option = options[j]
             grad_single = surrogate_models[option]
             adv_list_pre.append(x_inner.clone())
@@ -366,7 +366,7 @@ def I_FGSM_SMER_meta(surrogate_models,images, labels, args, num_iter=10):
             noise_inner_all[j] = grad_inner1.clone()
 
         # mate test
-        for k in range(m_smer):
+        for k in range(m_namea):
             remove_hooks(hook_handles)
             option = options[k]
             grad_single = surrogate_models[option]
